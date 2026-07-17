@@ -1,7 +1,5 @@
-
 # Import python packages
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col
 
 # Write directly to the app
@@ -12,10 +10,11 @@ st.write("Choose the fruits you want in your custom Smoothie!")
 name_on_order = st.text_input('Name on Smoothie:')
 st.write('The name on your Smoothie will be:', name_on_order)
 
-# Establish Snowflake session
-session = get_active_session()
+# Establish Snowflake session using standard Streamlit Connection
+cnx = st.connection("snowflake")
+session = cnx.session()
 
-# Fix applied: Only select the text column to avoid the 'int and str' TypeError
+# Only select the text column to avoid the 'int and str' TypeError
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 
 # Multiselect dropdown limited to 5 selections
